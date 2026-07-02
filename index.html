@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 Bracket Pool</title>
+<style>
+:root{
+  --red:#FF3B5C; --green:#2FCE7A; --navy:#0C2340; --gold:#E4B54A;
+  --bg:#0A111E; --card:#121C2D; --line:#22304A; --ink:#EDF1F7; --dim:#8A98AF;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.45}
+.ribbon{height:6px;background:linear-gradient(90deg,var(--red) 0 33.3%,#fff 33.3% 34.3%,var(--green) 34.3% 66.6%,#fff 66.6% 67.6%,var(--navy) 67.6% 100%)}
+.hero{background:linear-gradient(160deg,#10203C,#0A111E 70%);color:#fff;padding:22px 0 20px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;
+  background:conic-gradient(var(--red) 0 120deg,var(--green) 120deg 240deg,#fff 240deg 360deg);opacity:.14}
+.wrap{max-width:640px;margin:0 auto;padding:0 14px}
+h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:34px;letter-spacing:.5px;text-transform:uppercase;line-height:1}
+h1 small{display:block;font-size:15px;letter-spacing:3px;color:#9FB0C8;font-weight:500;margin-bottom:2px}
+.sub{color:#9FB0C8;font-size:12.5px;margin-top:6px}
+.status{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:4px 12px;font-size:12px;color:#C9D4E4}
+.status .dot{width:8px;height:8px;border-radius:50%;background:#9FB0C8}
+.status.live .dot{background:#3DE08A;box-shadow:0 0 6px #3DE08A}
+.status.live{color:#fff}
+.main{padding:16px 14px 60px;max-width:640px;margin:0 auto}
+.tabs{display:flex;gap:8px;margin-bottom:14px;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5}
+.tab{flex:1;text-align:center;padding:9px 0;border-radius:10px;background:var(--card);border:1px solid var(--line);color:var(--dim);font-weight:600;font-size:13.5px;cursor:pointer;user-select:none}
+.tab.on{background:var(--green);border-color:var(--green);color:#06130B;box-shadow:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.rank{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:700;width:30px;height:30px;line-height:30px;text-align:center;color:var(--dim);border-radius:50%}
+.prize .rank{background:var(--gold);color:#14100A}
+.pname{flex:1;font-weight:600}
+.pname small{display:block;color:var(--dim);font-weight:400;font-size:11.5px}
+.pts{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:700;color:var(--green);min-width:46px;text-align:right}
+.payout{font-size:10.5px;color:var(--gold);border:1px solid var(--gold);border-radius:6px;padding:1px 6px;font-weight:700}
+.sec{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:1.5px;font-size:16px;color:var(--ink);margin:20px 4px 8px;border-left:4px solid var(--red);padding-left:8px}
+.match{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.match:last-child{border-bottom:none}
+.match .t1{text-align:right}.match .t2{text-align:left}
+.match .win{font-weight:700;color:var(--green)}
+.score{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:700;background:#22304A;color:#fff;border-radius:8px;padding:2px 10px;white-space:nowrap}
+.score.pending{background:transparent;color:var(--dim);font-size:12px;font-family:Inter,sans-serif;font-weight:400;border:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{padding:7px 12px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:13px;color:var(--dim);cursor:pointer;user-select:none}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+.pickgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;padding:12px 14px}
+.pick{display:flex;align-items:center;gap:6px;background:#0E1726;border-radius:8px;padding:6px 9px;font-size:13px;border:1px solid var(--line)}
+.pick .mk{font-weight:700;font-size:12px}
+.ok{border-color:var(--green)} .ok .mk{color:var(--green)}
+.bad{opacity:.5} .bad .mk{color:var(--red)}
+.tbd .mk{color:var(--dim)}
+.stagehead{display:flex;justify-content:space-between;align-items:baseline;padding:11px 14px 0;font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:1px;font-size:14.5px;color:var(--dim)}
+.stagehead b{color:var(--green);font-size:17px}
+.note{font-size:12px;color:var(--dim);margin:8px 4px 0}
+footer{margin-top:26px;text-align:center;color:var(--dim);font-size:11.5px}
+@media(min-width:520px){h1{font-size:40px}}
+</style>
+</head>
+<body>
+<div class="ribbon"></div>
+<div class="hero"><div class="wrap">
+  <h1><small>United 2026 · Canada · Mexico · USA</small>World Cup Bracket Pool</h1>
+  <div class="sub">13 entries · RM300 each · Payout 80 / 15 / 5</div>
+  <div class="status" id="status"><span class="dot"></span><span id="statusTxt">Loading results…</span></div>
+</div></div>
+<div class="ribbon"></div>
+<div class="main">
+  <div class="tabs">
+    <div class="tab on" data-v="standings">Standings</div>
+    <div class="tab" data-v="matches">Matches</div>
+    <div class="tab" data-v="brackets">Brackets</div>
+  </div>
+  <div id="v-standings"></div>
+  <div id="v-matches" style="display:none"></div>
+  <div id="v-brackets" style="display:none"></div>
+  <footer>Points per correct pick: R32 1 · R16 2 · QF 3 · SF 4 · 3rd 5 · Finalist 6 · Champion 10 · Top scorer 12<br>
+  Results feed: openfootball (public domain). Reopen or refresh to update.</footer>
+</div>
+<script>
+const DATA = {"participants": {"Jason": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Czechia", "France", "Sweden", "USA", "Ivory Coast", "Belgium", "Norway", "Colombia", "Croatia", "Spain", "Austria", "Brazil", "Japan", "Ecuador", "Senegal", "Mexico", "Scotland", "England", "Algeria", "Switzerland", "Iran", "Portugal", "Ghana", "Argentina", "Uruguay", "Turkiye", "Egypt"], "R16": ["Korea Republic", "Netherlands", "Germany", "France", "USA", "Belgium", "Croatia", "Spain", "Brazil", "Senegal", "Mexico", "England", "Switzerland", "Portugal", "Argentina", "Turkiye"], "QF": ["Netherlands", "France", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["France", "Spain", "England", "Argentina"], "THIRD": ["France", "England"], "FINAL": ["Spain", "Argentina"], "CHAMPION": "Spain", "TOPSCORER": "Kylian Mbappe"}, "Teng Hau": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Sweden", "France", "Uruguay", "USA", "Senegal", "Belgium", "Czechia", "Colombia", "Croatia", "Spain", "Algeria", "Brazil", "Japan", "Ecuador", "Norway", "Mexico", "Scotland", "England", "Ivory Coast", "Switzerland", "Austria", "Portugal", "Australia", "Argentina", "Saudi Arabia", "Paraguay", "Egypt"], "R16": ["Korea Republic", "Netherlands", "Germany", "France", "USA", "Belgium", "Colombia", "Spain", "Brazil", "Norway", "Mexico", "England", "Switzerland", "Portugal", "Argentina", "Paraguay"], "QF": ["Netherlands", "Germany", "USA", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["Germany", "Spain", "England", "Portugal"], "THIRD": ["Portugal", "Spain"], "FINAL": ["Germany", "England"], "CHAMPION": "England", "TOPSCORER": "Harry Kane"}, "Randy": {"R32": ["Korea Republic", "Switzerland", "Netherlands", "Morocco", "Germany", "Czechia", "France", "Paraguay", "USA", "Bosnia", "Belgium", "Ivory Coast", "Colombia", "Croatia", "Spain", "Austria", "Brazil", "Japan", "Ecuador", "Norway", "Mexico", "Scotland", "England", "Senegal", "Canada", "Iran", "Portugal", "Algeria", "Argentina", "Uruguay", "Turkiye", "Egypt"], "R16": ["Switzerland", "Netherlands", "Germany", "France", "USA", "Belgium", "Colombia", "Spain", "Brazil", "Norway", "Mexico", "England", "Canada", "Portugal", "Argentina", "Turkiye"], "QF": ["Netherlands", "France", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["France", "Spain", "England", "Argentina"], "THIRD": ["Spain", "Argentina"], "FINAL": ["France", "England"], "CHAMPION": "France", "TOPSCORER": "Harry Kane"}, "ST": {"R32": ["Korea Republic", "Qatar", "Netherlands", "Morocco", "Germany", "South Africa", "France", "Turkiye", "Paraguay", "Sweden", "Belgium", "Senegal", "Colombia", "Croatia", "Spain", "Austria", "Brazil", "Japan", "Ecuador", "Norway", "Mexico", "Scotland", "England", "Saudi Arabia", "Switzerland", "New Zealand", "Portugal", "Ghana", "Argentina", "Uruguay", "Australia", "Egypt"], "R16": ["Korea Republic", "Netherlands", "Germany", "France", "Paraguay", "Belgium", "Croatia", "Spain", "Brazil", "Ecuador", "Mexico", "England", "Switzerland", "Portugal", "Argentina", "Australia"], "QF": ["Netherlands", "Germany", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["Germany", "Spain", "England", "Argentina"], "THIRD": ["Spain", "Argentina"], "FINAL": ["Germany", "England"], "CHAMPION": "England", "TOPSCORER": null}, "Hoang Phan": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Czechia", "France", "Scotland", "USA", "Bosnia", "Belgium", "Senegal", "Colombia", "Croatia", "Spain", "Austria", "Brazil", "Japan", "Ecuador", "Norway", "Mexico", "Sweden", "England", "Algeria", "Switzerland", "Iran", "Portugal", "Ivory Coast", "Argentina", "Uruguay", "Turkiye", "Egypt"], "R16": ["Korea Republic", "Netherlands", "Germany", "France", "USA", "Belgium", "Croatia", "Spain", "Brazil", "Norway", "Mexico", "England", "Switzerland", "Portugal", "Argentina", "Turkiye"], "QF": ["Netherlands", "France", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["France", "Spain", "England", "Argentina"], "THIRD": ["Spain", "Argentina"], "FINAL": ["France", "England"], "CHAMPION": "France", "TOPSCORER": "Kylian Mbappe"}, "Joseph": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Japan", "France", "Turkiye", "Brazil", "Sweden", "Ivory Coast", "Norway", "Mexico", "Scotland", "Croatia", "Senegal", "USA", "Bosnia", "Belgium", "Austria", "Colombia", "England", "Spain", "Algeria", "Switzerland", "Ecuador", "Portugal", "Ghana", "Argentina", "Uruguay", "Australia", "Iran"], "R16": ["Korea Republic", "Netherlands", "Japan", "France", "Brazil", "Norway", "Mexico", "Croatia", "USA", "Belgium", "England", "Spain", "Switzerland", "Portugal", "Argentina", "Iran"], "QF": ["Netherlands", "France", "Brazil", "Mexico", "USA", "Spain", "Portugal", "Argentina"], "SF": ["France", "Brazil", "Spain", "Argentina"], "THIRD": ["Argentina"], "FINAL": ["Brazil", "Spain"], "CHAMPION": "Brazil", "TOPSCORER": "Vinícius Júnior"}, "Anna": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Scotland", "France", "Sweden", "USA", "Senegal", "Belgium", "Ivory Coast", "Colombia", "Croatia", "Spain", "Austria", "Brazil", "Japan", "Ecuador", "Norway", "Mexico", "Saudi Arabia", "England", "Algeria", "Switzerland", "Iran", "Portugal", "Australia", "Argentina", "Uruguay", "Turkiye", "Egypt"], "R16": ["Canada", "Morocco", "Germany", "France", "USA", "Belgium", "Colombia", "Spain", "Brazil", "Norway", "Mexico", "England", "Switzerland", "Portugal", "Argentina", "Turkiye"], "QF": ["Morocco", "Germany", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["Germany", "Spain", "England", "Argentina"], "THIRD": ["Germany", "Argentina"], "FINAL": ["Spain", "England"], "CHAMPION": "Spain", "TOPSCORER": "Harry Kane"}, "Tuanlee": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Mexico", "France", "Scotland", "Brazil", "Japan", "Ecuador", "Iraq", "Czechia", "Saudi Arabia", "Croatia", "Austria", "Paraguay", "Tunisia", "Belgium", "Curacao", "Congo DR", "England", "Spain", "Austria", "Switzerland", "Algeria", "Portugal", "USA", "Argentina", "Uruguay", "Turkiye", "Egypt"], "R16": ["Korea Republic", "Netherlands", "Germany", "France", "Brazil", "Ecuador", "Saudi Arabia", "Croatia", "Paraguay", "Belgium", "England", "Spain", "Switzerland", "Portugal", "Argentina", "Turkiye"], "QF": ["Korea Republic", "France", "Brazil", "Croatia", "Paraguay", "England", "Portugal", "Argentina"], "SF": ["France", "Brazil", "England", "Argentina"], "THIRD": ["Brazil", "England"], "FINAL": ["France", "Argentina"], "CHAMPION": "France", "TOPSCORER": "France (Mbappe)"}, "Johnson": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Turkiye", "France", "Iran", "USA", "Côte d'Ivoire", "Belgium", "Czechia", "Colombia", "Croatia", "Spain", "Austria", "Brazil", "Sweden", "Ecuador", "Norway", "Mexico", "Scotland", "England", "Senegal", "Switzerland", "Japan", "Portugal", "Ghana", "Argentina", "Uruguay", "Paraguay", "Egypt"], "R16": ["Korea Republic", "Netherlands", "Germany", "France", "USA", "Belgium", "Croatia", "Spain", "Brazil", "Norway", "Mexico", "England", "Switzerland", "Portugal", "Argentina", "Paraguay"], "QF": ["Netherlands", "France", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["France", "Spain", "Brazil", "Argentina"], "THIRD": ["France", "Brazil"], "FINAL": ["Spain", "Argentina"], "CHAMPION": "Spain", "TOPSCORER": "Kylian Mbappe"}, "Vinz Yap": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Scotland", "France", "Egypt", "USA", "Bosnia", "Belgium", "Saudi Arabia", "Colombia", "Croatia", "Spain", "Algeria", "Brazil", "Japan", "Ivory Coast", "Norway", "Mexico", "Senegal", "England", "Ecuador", "Switzerland", "Austria", "Portugal", "Australia", "Argentina", "Uruguay", "Turkiye", "Iran"], "R16": ["Korea Republic", "Netherlands", "Germany", "France", "USA", "Belgium", "Croatia", "Spain", "Brazil", "Norway", "Mexico", "England", "Switzerland", "Portugal", "Argentina", "Turkiye"], "QF": ["Netherlands", "France", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["France", "Spain", "England", "Portugal"], "THIRD": ["England", "France"], "FINAL": ["Spain", "Portugal"], "CHAMPION": "Spain", "TOPSCORER": "Kylian Mbappe"}, "Yann": {"R32": ["Korea Republic", "Canada", "Netherlands", "Morocco", "Germany", "Czechia", "France", "Iran", "USA", "Sweden", "Belgium", "Ivory Coast", "Colombia", "Croatia", "Spain", "Austria", "Brazil", "Japan", "Ecuador", "Senegal", "Mexico", "Scotland", "England", "Algeria", "Switzerland", "Norway", "Portugal", "Paraguay", "Argentina", "Uruguay", "Turkiye", "Egypt"], "R16": ["Canada", "Netherlands", "Germany", "France", "USA", "Belgium", "Colombia", "Spain", "Brazil", "Senegal", "Mexico", "England", "Norway", "Portugal", "Argentina", "Turkiye"], "QF": ["Netherlands", "France", "Belgium", "Spain", "Brazil", "England", "Portugal", "Argentina"], "SF": ["France", "Spain", "England", "Argentina"], "THIRD": ["France", "Argentina"], "FINAL": ["Spain", "England"], "CHAMPION": "Spain", "TOPSCORER": "Kylian Mbappe"}, "Brenam Chew": {"R32": ["Mexico", "Canada", "Netherlands", "Morocco", "Germany", "Czechia", "France", "Turkiye", "Brazil", "Japan", "Ivory Coast", "Senegal", "Korea Republic", "Ecuador", "England", "Norway", "USA", "Sweden", "Belgium", "Cabo Verde", "Colombia", "Croatia", "Spain", "Algeria", "Switzerland", "Austria", "Portugal", "Ghana", "Argentina", "Uruguay", "Paraguay", "Iran"], "R16": ["Mexico", "Netherlands", "Germany", "France", "Brazil", "Senegal", "Korea Republic", "England", "USA", "Belgium", "Colombia", "Spain", "Switzerland", "Portugal", "Argentina", "Paraguay"], "QF": ["Netherlands", "France", "Brazil", "England", "Belgium", "Spain", "Switzerland", "Argentina"], "SF": ["France", "England", "Spain", "Argentina"], "THIRD": ["Argentina", "England"], "FINAL": ["France", "Spain"], "CHAMPION": "France", "TOPSCORER": "Kylian Mbappe"}, "Ben Tan": {"R32": ["Czechia", "Canada", "Netherlands", "Morocco", "Germany", "Bosnia", "France", "Scotland", "Brazil", "Japan", "Ivory Coast", "Norway", "Mexico", "Sweden", "England", "Congo DR", "USA", "Ecuador", "Belgium", "Algeria", "Colombia", "Croatia", "Spain", "Austria", "Switzerland", "Senegal", "Portugal", "Ghana", "Argentina", "Uruguay", "Turkiye", "Egypt"], "R16": ["Canada", "Netherlands", "Germany", "France", "Brazil", "Norway", "Mexico", "England", "USA", "Belgium", "Colombia", "Spain", "Switzerland", "Portugal", "Argentina", "Egypt"], "QF": ["Netherlands", "France", "Norway", "England", "USA", "Spain", "Portugal", "Argentina"], "SF": ["France", "England", "Spain", "Argentina"], "THIRD": ["France", "Argentina"], "FINAL": ["England", "Spain"], "CHAMPION": "England", "TOPSCORER": "Harry Kane"}}, "snapshot": [{"round": "Matchday 1", "team1": "Mexico", "team2": "South Africa", "score": {"ft": [2, 0], "ht": [1, 0]}, "date": "2026-06-11", "num": null}, {"round": "Matchday 1", "team1": "South Korea", "team2": "Czech Republic", "score": {"ft": [2, 1], "ht": [0, 0]}, "date": "2026-06-11", "num": null}, {"round": "Matchday 8", "team1": "Czech Republic", "team2": "South Africa", "score": {"ft": [1, 1], "ht": [1, 0]}, "date": "2026-06-18", "num": null}, {"round": "Matchday 8", "team1": "Mexico", "team2": "South Korea", "score": {"ft": [1, 0], "ht": [0, 0]}, "date": "2026-06-18", "num": null}, {"round": "Matchday 14", "team1": "Czech Republic", "team2": "Mexico", "score": {"ft": [0, 3], "ht": [0, 0]}, "date": "2026-06-24", "num": null}, {"round": "Matchday 14", "team1": "South Africa", "team2": "South Korea", "score": {"ft": [1, 0], "ht": [0, 0]}, "date": "2026-06-24", "num": null}, {"round": "Matchday 2", "team1": "Canada", "team2": "Bosnia & Herzegovina", "score": {"ft": [1, 1], "ht": [0, 1]}, "date": "2026-06-12", "num": null}, {"round": "Matchday 3", "team1": "Qatar", "team2": "Switzerland", "score": {"ft": [1, 1], "ht": [0, 1]}, "date": "2026-06-13", "num": null}, {"round": "Matchday 8", "team1": "Switzerland", "team2": "Bosnia & Herzegovina", "score": {"ft": [4, 1], "ht": [0, 0]}, "date": "2026-06-18", "num": null}, {"round": "Matchday 8", "team1": "Canada", "team2": "Qatar", "score": {"ft": [6, 0], "ht": [3, 0]}, "date": "2026-06-18", "num": null}, {"round": "Matchday 14", "team1": "Switzerland", "team2": "Canada", "score": {"ft": [2, 1], "ht": [0, 0]}, "date": "2026-06-24", "num": null}, {"round": "Matchday 14", "team1": "Bosnia & Herzegovina", "team2": "Qatar", "score": {"ft": [3, 1], "ht": [2, 1]}, "date": "2026-06-24", "num": null}, {"round": "Matchday 3", "team1": "Brazil", "team2": "Morocco", "score": {"ft": [1, 1], "ht": [1, 1]}, "date": "2026-06-13", "num": null}, {"round": "Matchday 3", "team1": "Haiti", "team2": "Scotland", "score": {"ft": [0, 1], "ht": [0, 1]}, "date": "2026-06-13", "num": null}, {"round": "Matchday 9", "team1": "Scotland", "team2": "Morocco", "score": {"ft": [0, 1], "ht": [0, 1]}, "date": "2026-06-19", "num": null}, {"round": "Matchday 9", "team1": "Brazil", "team2": "Haiti", "score": {"ft": [3, 0], "ht": [3, 0]}, "date": "2026-06-19", "num": null}, {"round": "Matchday 14", "team1": "Scotland", "team2": "Brazil", "score": {"ft": [0, 3], "ht": [0, 2]}, "date": "2026-06-24", "num": null}, {"round": "Matchday 14", "team1": "Morocco", "team2": "Haiti", "score": {"ft": [4, 2], "ht": [2, 2]}, "date": "2026-06-24", "num": null}, {"round": "Matchday 2", "team1": "USA", "team2": "Paraguay", "score": {"ft": [4, 1], "ht": [3, 0]}, "date": "2026-06-12", "num": null}, {"round": "Matchday 3", "team1": "Australia", "team2": "Turkey", "score": {"ft": [2, 0], "ht": [1, 0]}, "date": "2026-06-13", "num": null}, {"round": "Matchday 9", "team1": "USA", "team2": "Australia", "score": {"ft": [2, 0], "ht": [2, 0]}, "date": "2026-06-19", "num": null}, {"round": "Matchday 9", "team1": "Turkey", "team2": "Paraguay", "score": {"ft": [0, 1], "ht": [0, 1]}, "date": "2026-06-19", "num": null}, {"round": "Matchday 15", "team1": "Turkey", "team2": "USA", "score": {"ft": [3, 2], "ht": [2, 1]}, "date": "2026-06-25", "num": null}, {"round": "Matchday 15", "team1": "Paraguay", "team2": "Australia", "score": {"ft": [0, 0], "ht": [0, 0]}, "date": "2026-06-25", "num": null}, {"round": "Matchday 4", "team1": "Germany", "team2": "Curaçao", "score": {"ft": [7, 1], "ht": [3, 1]}, "date": "2026-06-14", "num": null}, {"round": "Matchday 4", "team1": "Ivory Coast", "team2": "Ecuador", "score": {"ft": [1, 0], "ht": [0, 0]}, "date": "2026-06-14", "num": null}, {"round": "Matchday 10", "team1": "Germany", "team2": "Ivory Coast", "score": {"ft": [2, 1], "ht": [0, 1]}, "date": "2026-06-20", "num": null}, {"round": "Matchday 10", "team1": "Ecuador", "team2": "Curaçao", "score": {"ft": [0, 0], "ht": [0, 0]}, "date": "2026-06-20", "num": null}, {"round": "Matchday 15", "team1": "Curaçao", "team2": "Ivory Coast", "score": {"ft": [0, 2], "ht": [0, 1]}, "date": "2026-06-25", "num": null}, {"round": "Matchday 15", "team1": "Ecuador", "team2": "Germany", "score": {"ft": [2, 1], "ht": [1, 1]}, "date": "2026-06-25", "num": null}, {"round": "Matchday 4", "team1": "Netherlands", "team2": "Japan", "score": {"ft": [2, 2], "ht": [0, 0]}, "date": "2026-06-14", "num": null}, {"round": "Matchday 4", "team1": "Sweden", "team2": "Tunisia", "score": {"ft": [5, 1], "ht": [2, 1]}, "date": "2026-06-14", "num": null}, {"round": "Matchday 10", "team1": "Netherlands", "team2": "Sweden", "score": {"ft": [5, 1], "ht": [2, 0]}, "date": "2026-06-20", "num": null}, {"round": "Matchday 10", "team1": "Tunisia", "team2": "Japan", "score": {"ft": [0, 4], "ht": [0, 2]}, "date": "2026-06-20", "num": null}, {"round": "Matchday 15", "team1": "Japan", "team2": "Sweden", "score": {"ft": [1, 1], "ht": [0, 0]}, "date": "2026-06-25", "num": null}, {"round": "Matchday 15", "team1": "Tunisia", "team2": "Netherlands", "score": {"ft": [1, 3], "ht": [0, 2]}, "date": "2026-06-25", "num": null}, {"round": "Matchday 5", "team1": "Belgium", "team2": "Egypt", "score": {"ft": [1, 1], "ht": [0, 1]}, "date": "2026-06-15", "num": null}, {"round": "Matchday 5", "team1": "Iran", "team2": "New Zealand", "score": {"ft": [2, 2], "ht": [1, 1]}, "date": "2026-06-15", "num": null}, {"round": "Matchday 11", "team1": "Belgium", "team2": "Iran", "score": {"ft": [0, 0], "ht": [0, 0]}, "date": "2026-06-21", "num": null}, {"round": "Matchday 11", "team1": "New Zealand", "team2": "Egypt", "score": {"ft": [1, 3], "ht": [1, 0]}, "date": "2026-06-21", "num": null}, {"round": "Matchday 16", "team1": "Egypt", "team2": "Iran", "score": {"ft": [1, 1], "ht": [1, 1]}, "date": "2026-06-26", "num": null}, {"round": "Matchday 16", "team1": "New Zealand", "team2": "Belgium", "score": {"ft": [1, 5], "ht": [0, 1]}, "date": "2026-06-26", "num": null}, {"round": "Matchday 5", "team1": "Spain", "team2": "Cape Verde", "score": {"ft": [0, 0], "ht": [0, 0]}, "date": "2026-06-15", "num": null}, {"round": "Matchday 5", "team1": "Saudi Arabia", "team2": "Uruguay", "score": {"ft": [1, 1], "ht": [1, 0]}, "date": "2026-06-15", "num": null}, {"round": "Matchday 11", "team1": "Spain", "team2": "Saudi Arabia", "score": {"ft": [4, 0], "ht": [3, 0]}, "date": "2026-06-21", "num": null}, {"round": "Matchday 11", "team1": "Uruguay", "team2": "Cape Verde", "score": {"ft": [2, 2], "ht": [2, 1]}, "date": "2026-06-21", "num": null}, {"round": "Matchday 16", "team1": "Cape Verde", "team2": "Saudi Arabia", "score": {"ft": [0, 0], "ht": [0, 0]}, "date": "2026-06-26", "num": null}, {"round": "Matchday 16", "team1": "Uruguay", "team2": "Spain", "score": {"ft": [0, 1], "ht": [0, 1]}, "date": "2026-06-26", "num": null}, {"round": "Matchday 6", "team1": "France", "team2": "Senegal", "score": {"ft": [3, 1], "ht": [0, 0]}, "date": "2026-06-16", "num": null}, {"round": "Matchday 6", "team1": "Iraq", "team2": "Norway", "score": {"ft": [1, 4], "ht": [1, 2]}, "date": "2026-06-16", "num": null}, {"round": "Matchday 12", "team1": "France", "team2": "Iraq", "score": {"ft": [3, 0], "ht": [1, 0]}, "date": "2026-06-22", "num": null}, {"round": "Matchday 12", "team1": "Norway", "team2": "Senegal", "score": {"ft": [3, 2], "ht": [1, 0]}, "date": "2026-06-22", "num": null}, {"round": "Matchday 16", "team1": "Norway", "team2": "France", "score": {"ft": [1, 4], "ht": [1, 3]}, "date": "2026-06-26", "num": null}, {"round": "Matchday 16", "team1": "Senegal", "team2": "Iraq", "score": {"ft": [5, 0], "ht": [1, 0]}, "date": "2026-06-26", "num": null}, {"round": "Matchday 6", "team1": "Argentina", "team2": "Algeria", "score": {"ft": [3, 0], "ht": [1, 0]}, "date": "2026-06-16", "num": null}, {"round": "Matchday 6", "team1": "Austria", "team2": "Jordan", "score": {"ft": [3, 1], "ht": [1, 0]}, "date": "2026-06-16", "num": null}, {"round": "Matchday 12", "team1": "Argentina", "team2": "Austria", "score": {"ft": [2, 0], "ht": [1, 0]}, "date": "2026-06-22", "num": null}, {"round": "Matchday 12", "team1": "Jordan", "team2": "Algeria", "score": {"ft": [1, 2], "ht": [1, 0]}, "date": "2026-06-22", "num": null}, {"round": "Matchday 17", "team1": "Algeria", "team2": "Austria", "score": {"ft": [3, 3], "ht": [1, 1]}, "date": "2026-06-27", "num": null}, {"round": "Matchday 17", "team1": "Jordan", "team2": "Argentina", "score": {"ft": [1, 3], "ht": [0, 2]}, "date": "2026-06-27", "num": null}, {"round": "Matchday 7", "team1": "Portugal", "team2": "DR Congo", "score": {"ft": [1, 1], "ht": [1, 1]}, "date": "2026-06-17", "num": null}, {"round": "Matchday 7", "team1": "Uzbekistan", "team2": "Colombia", "score": {"ft": [1, 3], "ht": [0, 1]}, "date": "2026-06-17", "num": null}, {"round": "Matchday 13", "team1": "Portugal", "team2": "Uzbekistan", "score": {"ft": [5, 0], "ht": [3, 0]}, "date": "2026-06-23", "num": null}, {"round": "Matchday 13", "team1": "Colombia", "team2": "DR Congo", "score": {"ft": [1, 0], "ht": [0, 0]}, "date": "2026-06-23", "num": null}, {"round": "Matchday 17", "team1": "Colombia", "team2": "Portugal", "score": {"ft": [0, 0], "ht": [0, 0]}, "date": "2026-06-27", "num": null}, {"round": "Matchday 17", "team1": "DR Congo", "team2": "Uzbekistan", "score": {"ft": [3, 1], "ht": [0, 1]}, "date": "2026-06-27", "num": null}, {"round": "Matchday 7", "team1": "England", "team2": "Croatia", "score": {"ft": [4, 2], "ht": [2, 2]}, "date": "2026-06-17", "num": null}, {"round": "Matchday 7", "team1": "Ghana", "team2": "Panama", "score": {"ft": [1, 0], "ht": [0, 0]}, "date": "2026-06-17", "num": null}, {"round": "Matchday 13", "team1": "England", "team2": "Ghana", "score": {"ft": [0, 0], "ht": [0, 0]}, "date": "2026-06-23", "num": null}, {"round": "Matchday 13", "team1": "Panama", "team2": "Croatia", "score": {"ft": [0, 1], "ht": [0, 0]}, "date": "2026-06-23", "num": null}, {"round": "Matchday 17", "team1": "Panama", "team2": "England", "score": {"ft": [0, 2], "ht": [0, 0]}, "date": "2026-06-27", "num": null}, {"round": "Matchday 17", "team1": "Croatia", "team2": "Ghana", "score": {"ft": [2, 1], "ht": [1, 0]}, "date": "2026-06-27", "num": null}, {"round": "Round of 32", "team1": "South Africa", "team2": "Canada", "score": {"ft": [0, 1], "ht": [0, 0]}, "date": "2026-06-28", "num": 73}, {"round": "Round of 32", "team1": "Germany", "team2": "Paraguay", "score": {"p": [3, 4], "et": [1, 1], "ft": [1, 1], "ht": [0, 1]}, "date": "2026-06-29", "num": 74}, {"round": "Round of 32", "team1": "Netherlands", "team2": "Morocco", "score": {"p": [2, 3], "et": [1, 1], "ft": [1, 1], "ht": [0, 0]}, "date": "2026-06-29", "num": 75}, {"round": "Round of 32", "team1": "Brazil", "team2": "Japan", "score": {"ft": [2, 1], "ht": [0, 1]}, "date": "2026-06-29", "num": 76}, {"round": "Round of 32", "team1": "France", "team2": "Sweden", "score": {"ft": [3, 0], "ht": [1, 0]}, "date": "2026-06-30", "num": 77}, {"round": "Round of 32", "team1": "Ivory Coast", "team2": "Norway", "score": {"ft": [1, 2], "ht": [0, 1]}, "date": "2026-06-30", "num": 78}, {"round": "Round of 32", "team1": "Mexico", "team2": "Ecuador", "score": {"ft": [2, 0], "ht": [1, 0]}, "date": "2026-06-30", "num": 79}, {"round": "Round of 32", "team1": "England", "team2": "DR Congo", "score": {"ft": [2, 1], "ht": [0, 1]}, "date": "2026-07-01", "num": 80}, {"round": "Round of 32", "team1": "USA", "team2": "Bosnia & Herzegovina", "score": {"ft": [2, 0], "ht": [1, 0]}, "date": "2026-07-01", "num": 81}, {"round": "Round of 32", "team1": "Belgium", "team2": "Senegal", "score": {"et": [3, 2], "ft": [2, 2], "ht": [0, 1]}, "date": "2026-07-01", "num": 82}, {"round": "Round of 32", "team1": "Portugal", "team2": "Croatia", "score": null, "date": "2026-07-02", "num": 83}, {"round": "Round of 32", "team1": "Spain", "team2": "Austria", "score": null, "date": "2026-07-02", "num": 84}, {"round": "Round of 32", "team1": "Switzerland", "team2": "Algeria", "score": null, "date": "2026-07-02", "num": 85}, {"round": "Round of 32", "team1": "Argentina", "team2": "Cape Verde", "score": null, "date": "2026-07-03", "num": 86}, {"round": "Round of 32", "team1": "Colombia", "team2": "Ghana", "score": null, "date": "2026-07-03", "num": 87}, {"round": "Round of 32", "team1": "Australia", "team2": "Egypt", "score": null, "date": "2026-07-03", "num": 88}, {"round": "Round of 16", "team1": "Paraguay", "team2": "France", "score": null, "date": "2026-07-04", "num": 89}, {"round": "Round of 16", "team1": "Canada", "team2": "Morocco", "score": null, "date": "2026-07-04", "num": 90}, {"round": "Round of 16", "team1": "Brazil", "team2": "Norway", "score": null, "date": "2026-07-05", "num": 91}, {"round": "Round of 16", "team1": "Mexico", "team2": "England", "score": null, "date": "2026-07-05", "num": 92}, {"round": "Round of 16", "team1": "W83", "team2": "W84", "score": null, "date": "2026-07-06", "num": 93}, {"round": "Round of 16", "team1": "USA", "team2": "Belgium", "score": null, "date": "2026-07-06", "num": 94}, {"round": "Round of 16", "team1": "W86", "team2": "W88", "score": null, "date": "2026-07-07", "num": 95}, {"round": "Round of 16", "team1": "W85", "team2": "W87", "score": null, "date": "2026-07-07", "num": 96}, {"round": "Quarter-final", "team1": "W89", "team2": "W90", "score": null, "date": "2026-07-09", "num": 97}, {"round": "Quarter-final", "team1": "W93", "team2": "W94", "score": null, "date": "2026-07-10", "num": 98}, {"round": "Quarter-final", "team1": "W91", "team2": "W92", "score": null, "date": "2026-07-11", "num": 99}, {"round": "Quarter-final", "team1": "W95", "team2": "W96", "score": null, "date": "2026-07-11", "num": 100}, {"round": "Semi-final", "team1": "W97", "team2": "W98", "score": null, "date": "2026-07-14", "num": 101}, {"round": "Semi-final", "team1": "W99", "team2": "W100", "score": null, "date": "2026-07-15", "num": 102}, {"round": "Match for third place", "team1": "L101", "team2": "L102", "score": null, "date": "2026-07-18", "num": 103}, {"round": "Final", "team1": "W101", "team2": "W102", "score": null, "date": "2026-07-19", "num": 104}], "snapshot_date": "2026-07-02"};
+const FEED = "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
+const PTS = {R32:1,R16:2,QF:3,SF:4,THIRD:5,FINAL:6,CHAMPION:10,TOPSCORER:12};
+const EXP = {R32:32,R16:16,QF:8,SF:4,THIRD:2,FINAL:2,CHAMPION:1};
+const ORDER = ["R32","R16","QF","SF","THIRD","FINAL","CHAMPION","TOPSCORER"];
+const LBL = {R32:"Round of 32",R16:"Round of 16",QF:"Quarter-finals",SF:"Semi-finals",THIRD:"3rd-place match",FINAL:"Final",CHAMPION:"Champion",TOPSCORER:"Top scorer"};
+const RND = {"Round of 32":0,"Round of 16":1,"Quarter-final":2,"Semi-final":3,"Match for third place":4,"Final":5};
+const ALIAS = {"czech republic":"Czechia","south korea":"Korea Republic","turkey":"Turkiye",
+ "dr congo":"Congo DR","cape verde":"Cabo Verde","bosnia & herzegovina":"Bosnia","curaçao":"Curacao"};
+const norm = t => ALIAS[String(t).toLowerCase()] || t;
+const isPH = t => /^[WL]\d+$/.test(String(t));
+
+function winner(m){
+  const s=m.score||{};
+  for(const k of ["p","et","ft"]) if(s[k]){ if(s[k][0]>s[k][1])return m.team1; if(s[k][1]>s[k][0])return m.team2; }
+  return null;
+}
+function scoreTxt(m){
+  const s=m.score||{}; if(!s.ft) return null;
+  let t = s.et?`${s.et[0]}–${s.et[1]} aet`:`${s.ft[0]}–${s.ft[1]}`;
+  if(s.p) t+=` (${s.p[0]}–${s.p[1]}p)`;
+  return t;
+}
+function compute(matches){
+  const rd = n => matches.filter(m=>m.round===n);
+  const teamsOf = ms => { const s=new Set(); ms.forEach(m=>{[m.team1,m.team2].forEach(t=>{if(!isPH(t))s.add(norm(t))})}); return s; };
+  const winnersOf = ms => { const s=new Set(); ms.forEach(m=>{const w=winner(m); if(w&&!isPH(w))s.add(norm(w))}); return s; };
+  const A = {};
+  A.R32 = teamsOf(rd("Round of 32"));
+  A.R16 = teamsOf(rd("Round of 16")); if(!A.R16.size) A.R16 = winnersOf(rd("Round of 32"));
+  A.QF  = teamsOf(rd("Quarter-final")); if(!A.QF.size) A.QF = winnersOf(rd("Round of 16"));
+  A.SF  = teamsOf(rd("Semi-final")); if(!A.SF.size) A.SF = winnersOf(rd("Quarter-final"));
+  A.THIRD = teamsOf(rd("Match for third place"));
+  A.FINAL = teamsOf(rd("Final")); if(!A.FINAL.size) A.FINAL = winnersOf(rd("Semi-final"));
+  const fm = rd("Final")[0];
+  A.CHAMPION = new Set(); if(fm){const w=winner(fm); if(w)A.CHAMPION.add(norm(w));}
+  A.TOPSCORER = new Set();
+  const lost = {};
+  matches.forEach(m=>{ if(RND[m.round]===undefined)return; const w=winner(m); if(!w)return;
+    const l = norm(w===m.team1?m.team2:m.team1); if(!isPH(l)&&lost[l]===undefined) lost[l]=RND[m.round]; });
+  return {A, lost, ko: matches.filter(m=>RND[m.round]!==undefined)};
+}
+function pickStatus(team, stage, R){
+  const {A,lost} = R;
+  if(stage==="TOPSCORER") return A.TOPSCORER.size ? (A.TOPSCORER.has(team)?"ok":"bad") : "tbd";
+  if(A[stage].has(team)) return "ok";
+  if(A[stage].size >= EXP[stage]) return "bad";
+  if(!A.R32.has(team)) return A.R32.size>=32 ? "bad" : "tbd";
+  const need = {R32:-1,R16:0,QF:1,SF:2,FINAL:3,CHAMPION:5,THIRD:2}[stage];
+  if(stage==="THIRD"){ return (lost[team]!==undefined && lost[team]<3) ? "bad" : "tbd"; }
+  if(stage==="CHAMPION"){ return lost[team]!==undefined ? "bad" : "tbd"; }
+  return (lost[team]!==undefined && lost[team]<=need) ? "bad" : "tbd";
+}
+function scoreAll(R){
+  const out=[];
+  for(const [name,p] of Object.entries(DATA.participants)){
+    const by={}; let tot=0;
+    for(const st of ["R32","R16","QF","SF","THIRD","FINAL"]){
+      const hits=[...new Set(p[st].filter(Boolean))].filter(t=>R.A[st].has(t)).length;
+      by[st]=hits*PTS[st]; tot+=by[st];
+    }
+    by.CHAMPION = R.A.CHAMPION.has(p.CHAMPION)?PTS.CHAMPION:0;
+    by.TOPSCORER = R.A.TOPSCORER.has(p.TOPSCORER)?PTS.TOPSCORER:0;
+    tot+=by.CHAMPION+by.TOPSCORER;
+    out.push({name,by,tot,picks:p});
+  }
+  out.sort((a,b)=>b.tot-a.tot||a.name.localeCompare(b.name));
+  let rank=0,prev=null;
+  out.forEach((e,i)=>{ if(e.tot!==prev){rank=i+1;prev=e.tot;} e.rank=rank; });
+  return out;
+}
+function render(R){
+  const board = scoreAll(R);
+  const pay={1:"80%",2:"15%",3:"5%"};
+  document.getElementById("v-standings").innerHTML =
+   `<div class="card">`+board.map(e=>
+     `<div class="row ${e.rank<=3?"prize":""}">
+       <div class="rank">${e.rank}</div>
+       <div class="pname">${e.name}<small>R32 ${e.by.R32} · R16 ${e.by.R16} · QF ${e.by.QF} · SF ${e.by.SF} · 3rd ${e.by.THIRD} · Fin ${e.by.FINAL} · Ch ${e.by.CHAMPION} · TS ${e.by.TOPSCORER}</small></div>
+       ${pay[e.rank]?`<span class="payout">${pay[e.rank]}</span>`:""}
+       <div class="pts">${e.tot}</div></div>`
+   ).join("")+`</div>
+   <div class="note">Ties share a rank; per T&C, tied winners split that prize equally.</div>`;
+  const rounds=["Round of 32","Round of 16","Quarter-final","Semi-final","Match for third place","Final"];
+  document.getElementById("v-matches").innerHTML = rounds.map(rn=>{
+    const ms=R.ko.filter(m=>m.round===rn); if(!ms.length)return "";
+    return `<div class="sec">${rn}</div><div class="card">`+ms.map(m=>{
+      const w=winner(m), s=scoreTxt(m);
+      const t1=isPH(m.team1)?"TBD":norm(m.team1), t2=isPH(m.team2)?"TBD":norm(m.team2);
+      return `<div class="match">
+        <div class="t1 ${w===m.team1?"win":""}">${t1}</div>
+        <div class="score ${s?"":"pending"}">${s||m.date||"TBD"}</div>
+        <div class="t2 ${w===m.team2?"win":""}">${t2}</div></div>`;
+    }).join("")+`</div>`;
+  }).join("");
+  const bx=document.getElementById("v-brackets");
+  bx.innerHTML=`<div class="chips">`+board.map((e,i)=>`<div class="chip ${i===0?"on":""}" data-p="${e.name}">${e.name}</div>`).join("")+`</div><div id="bdetail"></div>`;
+  const detail=name=>{
+    const e=board.find(x=>x.name===name);
+    document.getElementById("bdetail").innerHTML = ORDER.map(st=>{
+      let items;
+      if(st==="CHAMPION") items=[e.picks.CHAMPION];
+      else if(st==="TOPSCORER") items=[e.picks.TOPSCORER];
+      else items=[...new Set(e.picks[st].filter(Boolean))].sort();
+      if(!items[0]) return "";
+      const mark={ok:"✓",bad:"✗",tbd:"·"};
+      return `<div class="card"><div class="stagehead"><span>${LBL[st]} — ${PTS[st]} pt${PTS[st]>1?"s":""} each</span><b>${e.by[st]} pts</b></div>
+        <div class="pickgrid">`+items.map(t=>{
+          const s=pickStatus(t,st,R);
+          return `<div class="pick ${s}"><span class="mk">${mark[s]}</span>${t}</div>`;
+        }).join("")+`</div></div>`;
+    }).join("");
+  };
+  bx.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{bx.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");detail(c.dataset.p);});
+  detail(board[0].name);
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+  ["standings","matches","brackets"].forEach(v=>document.getElementById("v-"+v).style.display = t.dataset.v===v?"":"none");
+});
+const R0 = compute(DATA.snapshot); render(R0);
+const st=document.getElementById("status"), stt=document.getElementById("statusTxt");
+stt.textContent=`Snapshot · ${DATA.snapshot_date}`;
+fetch(FEED,{cache:"no-store"}).then(r=>r.json()).then(j=>{
+  render(compute(j.matches));
+  st.classList.add("live");
+  stt.textContent="Live · updated "+new Date().toLocaleString();
+}).catch(()=>{ stt.textContent=`Offline — showing snapshot of ${DATA.snapshot_date}`; });
+</script>
+</body>
+</html>
